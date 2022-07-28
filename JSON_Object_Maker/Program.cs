@@ -14,18 +14,30 @@ namespace JSON_Object_Maker
     {
         public static void Main(string[] args)
         {
-            string directoryPath = ConfigurationManager.AppSettings["directoryPath"];
+            string dataPath = ConfigurationManager.AppSettings["dataPath"];
             string fileIntake = ConfigurationManager.AppSettings["fileIntake"];
 
             var readDataFromFiles = File.ReadAllLines(fileIntake);
 
             List<string> readDataToParse = new List<string>(readDataFromFiles);
 
+            var objData = "{\n";
             foreach (var data in readDataToParse)
             {
-                var list = data.Split('\t');
-                var a = 0;
+                if(data == "----")
+                {
+                    objData += "},\n{\n";
+                }
+                else
+                {
+                    var list = data.Split('\t');
+                    objData += "\"" + list[0] + "\"" + " : " + "\"" + list[1] + "\"" + "\n";
+                }
             }
+            objData += "}";
+
+            File.WriteAllText(dataPath, objData);
+
         }
     }
 }
